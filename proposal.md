@@ -12,7 +12,7 @@ for customers while you scrounge up your savings to afford to focus on art.
 - Each ingredient will go back and fourth at the stop of the screen. when you press space, the ingredient will fall on the burger
 	- each ingredient is drawn and appended onto the scene. it will go across the X axis at a decided speed. upon key dress down, it will go down along the Y axis.
 - theres a randomly generated order ticket with the order on it.
-	- order ticket is appended onto the scene with random ingrdents, the ingredient instantly appear as you drop them on the burger, There is no choosing the right ingredient. 
+	- order ticket is appended onto the scene with random ingredients, the ingredient instantly appear as you drop them on the burger, There is no choosing the right ingredient. 
 - when each burger is made, money is given and put into a "art fund" jar.
 	- art fund jar recieves amount of money based on accuracy of the burger
 
