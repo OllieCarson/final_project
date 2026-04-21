@@ -1,4 +1,5 @@
 import random
+import os
 import pygame
 from PIL import Image
 
@@ -6,7 +7,7 @@ def main():
     pygame.init()
     pygame.display.set_caption("Build Burger")
     screen = pygame.display.set_mode((1920, 1080))
-    bg = pygame.image.load("Burger_BG.png")
+    bg = pygame.image.load("Burger_Game_Assets/Burger_BG.png").convert()
     running = True
     while running:
         for event in pygame.event.get():
