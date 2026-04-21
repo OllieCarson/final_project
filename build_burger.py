@@ -3,12 +3,33 @@ import os
 import pygame
 from PIL import Image
 
-def get_random_image(folder_path):
-    image_files = [f for f in os.listdir(folder_path) if f.startswith('Build_') and f.endswith('.png')]
-    if not image_files:
-        return None
-    random_image = random.choice(image_files)
-    return pygame.image.load(os.path.join(folder_path, random_image)).convert_alpha()
+
+
+class Asset:
+    def __init__(self, folder_path):
+        self.image = self.get_random_image(folder_path)
+        self.rect = self.image.get_rect(center = (0, 100))
+        self.hitbox = self.rect.inflate(-20, -90)
+        self.moving = True
+        self.dropping = False
+        self.speed_x = 5
+        self.speed_y = 0
+
+    def get_random_image(folder_path):
+        image_files = [f for f in os.listdir(folder_path) if f.startswith('Build_') and f.endswith('.png')]
+        if not image_files:
+            return None
+        random_image = random.choice(image_files)
+        return pygame.image.load(os.path.join(folder_path, random_image)).convert_alpha()
+
+    def display_random_ing(screen, folder_path):
+        random_ing = get_random_image(folder_path)
+        if random_ing:
+            ing_rect = random_ing.get_rect(center = (960, 100))
+            ing_hitbox = ing_rect.inflate(-20, -90)
+
+            screen.blit(random_ing, ing_rect)
+            pygame.draw.rect(screen, (0, 255, 0), ing_hitbox, 2)
 
 
 def build(screen):
@@ -21,14 +42,6 @@ def build(screen):
     pygame.draw.rect(screen, (255, 0, 0), bun_hitbox, 2)
 
 
-def display_random_ing(screen, folder_path):
-    random_ing = get_random_image(folder_path)
-    if random_ing:
-        ing_rect = random_ing.get_rect(center = (960, 100))
-        ing_hitbox = ing_rect.inflate(-20, -90)
-
-        screen.blit(random_ing, ing_rect)
-        pygame.draw.rect(screen, (0, 255, 0), ing_hitbox, 2)
 
 
 
