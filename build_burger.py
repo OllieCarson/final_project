@@ -7,7 +7,7 @@ def build(screen):
     bottom_bun = pygame.image.load("Burger_Game_Assets/burger_build/Build_Bottom_Bun.png").convert_alpha()
     #Make hitbox
     b_bun_rect = bottom_bun.get_rect(topleft = (632, 815))
-    bun_hitbox = b_bun_rect.inflate(-20, -20)
+    bun_hitbox = b_bun_rect.inflate(-20, -90)
 
 # to see my hitbox for changing
     screen.blit(bottom_bun, (632, 815))
@@ -19,7 +19,7 @@ def main():
     screen = pygame.display.set_mode((1920, 1080))
     bg = pygame.image.load("Burger_Game_Assets/Burger_BG.png").convert()
     clock = pygame.time.Clock()
-    dt = 0
+    
     running = True
     while running:
         for event in pygame.event.get():
@@ -30,7 +30,7 @@ def main():
         build(screen)
 
         pygame.display.flip()
-        dt = clock.tick(24)
+        clock.tick(24)
 
     pygame.quit()
 
