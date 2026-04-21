@@ -3,8 +3,24 @@ import os
 import pygame
 from PIL import Image
 
+def get_random_image(folder_path):
+    image_files = [f for f in os.listdir(folder_path) if f.startswith('Build_') and f.endswith('.png')]
+    if not image_files:
+        return None
+    random_image = random.choice(image_files)
+    return pygame.image.load(os.path.join(folder_path, random_image)).convert_alpha()
+
+
+
+
+
+
+
+
+
+
 def build(screen):
-    bottom_bun = pygame.image.load("Burger_Game_Assets/burger_build/Build_Bottom_Bun.png").convert_alpha()
+    bottom_bun = pygame.image.load("Burger_Game_Assets/Build_Bottom_Bun.png").convert_alpha()
     #Make hitbox
     b_bun_rect = bottom_bun.get_rect(topleft = (632, 815))
     bun_hitbox = b_bun_rect.inflate(-20, -90)
