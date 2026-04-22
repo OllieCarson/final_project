@@ -9,7 +9,7 @@ class Asset:
     def __init__(self, folder_path):
         self.image = self.get_random_image(folder_path)
         self.rect = self.image.get_rect(center = (random.randint(self.image.get_width()//2, 1920 - self.image.get_width()//2), 100))
-        self.hitbox = self.rect.inflate(-20, -90)
+        self.hitbox = self.rect.inflate(-20, -150)
         self.moving = True
         self.dropping = False
         self.speed_x = random.choice([-5, 5])
@@ -23,7 +23,7 @@ class Asset:
         random_image = random.choice(image_files)
         return pygame.image.load(os.path.join(folder_path, random_image)).convert_alpha()
     
-    def update(self, burger_hitbox):
+    def update(self, burger_hitbox, dropped_assets):
         if self.moving:
             self.rect.x += self.speed_x
             self.hitbox.x += self.speed_x
@@ -36,6 +36,7 @@ class Asset:
             if self.hitbox.colliderect(burger_hitbox):
                 self.dropping = False
                 self.rect.bottom = burger_hitbox.top
+                dropped_assets.append(self)
 
 
     def draw(self, screen):
@@ -43,7 +44,7 @@ class Asset:
         pygame.draw.rect(screen, (0, 255, 0), self.hitbox, 2)
 
 
-def build(screen):
+def build(screen, dropped_assets):
     bottom_bun = pygame.image.load("Burger_Game_Assets/Build_Bottom_Bun.png").convert_alpha()
     #Make hitbox
     b_bun_rect = bottom_bun.get_rect(topleft = (632, 815))
@@ -51,6 +52,14 @@ def build(screen):
 
     screen.blit(bottom_bun, (632, 815))
     pygame.draw.rect(screen, (255, 0, 0), bun_hitbox, 2)
+
+    for asset in dropped_assets:
+        screen.blit(asset.image, asset.rect)
+        pygame.draw.rect(screen, (0, 255, 0), asset.hitbox, 2)
+
+        if dropped_assets:
+            bun_hitbox = dropped_assets[-1].hitbox
+        
     return bun_hitbox
 
 
@@ -66,6 +75,7 @@ def main():
     folder_path = os.path.join("Burger_Game_Assets", "burger_build")
 
     asset = Asset(folder_path)
+    dropped_assets = []
     
     running = True
     while running:
@@ -79,14 +89,14 @@ def main():
                     asset.speed_y = 0
                 
         screen.blit(bg, (0, 0))
-        burger_hitbox = build(screen)
+        burger_hitbox = build(screen, dropped_assets)
+        asset.update(burger_hitbox, dropped_assets)
+        asset.draw(screen)
+
         if not asset.dropping and not asset.moving:
             asset = Asset(folder_path)
 
-        asset.update(burger_hitbox)
-        asset.draw(screen)
-        
-
+    
         pygame.display.flip()
         clock.tick(60)
 
