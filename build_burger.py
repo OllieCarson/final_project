@@ -44,6 +44,11 @@ class Asset:
         pygame.draw.rect(screen, (0, 255, 0), self.hitbox, 2)
 
 
+    def is_top_bun(self, folder_path):
+        image_path = os.path.join(folder_path, 'Build_Top_Bun.png')
+        return self.image.get_size() == pygame.image.load(image_path).convert_alpha().get_size()
+
+
 def build(screen, dropped_assets):
     bottom_bun = pygame.image.load("Burger_Game_Assets/Build_Bottom_Bun.png").convert_alpha()
     #Make hitbox
@@ -76,6 +81,7 @@ def main():
 
     asset = Asset(folder_path)
     dropped_assets = []
+    game_over = False
     
     running = True
     while running:
@@ -83,7 +89,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and asset.moving:
+                if event.key == pygame.K_SPACE and asset.moving and not game_over:
                     asset.moving = False
                     asset.dropping = True
                     asset.speed_y = 0
@@ -93,8 +99,11 @@ def main():
         asset.update(burger_hitbox, dropped_assets)
         asset.draw(screen)
 
-        if not asset.dropping and not asset.moving:
-            asset = Asset(folder_path)
+        if not asset.dropping and not asset.moving and not game_over:
+            if asset.is_top_bun(folder_path):
+                game_over = True
+            else:
+                asset = Asset(folder_path)
 
     
         pygame.display.flip()
