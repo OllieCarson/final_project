@@ -3,8 +3,8 @@ import os
 import pygame
 from PIL import Image
 
-
-
+#small change in plan, instead of making a score, each burger will make the tip jar fill more and more until it is full, then the game wil end.
+# TODO: have it reset when the bun is placed after a bit. then the tip jar fills.
 class Asset:
     def __init__(self, folder_path):
         self.image = self.get_random_image(folder_path)
@@ -68,9 +68,6 @@ def build(screen, dropped_assets):
     return bun_hitbox
 
 
-
-
-
 def main():
     pygame.init()
     pygame.display.set_caption("Build Burger")
@@ -79,9 +76,16 @@ def main():
     clock = pygame.time.Clock()
     folder_path = os.path.join("Burger_Game_Assets", "burger_build")
 
+    jar_folder_path = os.path.join("Burger_Game_Assets", "jar")
+    jar_images = [f for f in os.listdir(jar_folder_path) if f.startswith('Burger_Stage') and f.endswith('.png')]
+    jar_images = sorted(jar_images)
+    jar_stage_images = [pygame.image.load(os.path.join(jar_folder_path, image)).convert_alpha() for image in jar_images]
+    jar_image = jar_stage_images[0]
+
     asset = Asset(folder_path)
     dropped_assets = []
     game_over = False
+    stage = 0
     
     running = True
     while running:
@@ -95,6 +99,7 @@ def main():
                     asset.speed_y = 0
                 
         screen.blit(bg, (0, 0))
+        screen.blit(jar_image, (133, 510))
         burger_hitbox = build(screen, dropped_assets)
         asset.update(burger_hitbox, dropped_assets)
         asset.draw(screen)
@@ -102,6 +107,16 @@ def main():
         if not asset.dropping and not asset.moving and not game_over:
             if asset.is_top_bun(folder_path):
                 game_over = True
+                pygame.display.flip()
+                pygame.time.wait(1000)
+                if stage < len(jar_stage_images) - 1:
+                    stage += 1
+                    jar_image = jar_stage_images[stage]
+                    asset = Asset(folder_path)
+                    dropped_assets = []
+                    game_over = False
+                else:
+                    running = False
             else:
                 asset = Asset(folder_path)
 
