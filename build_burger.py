@@ -6,8 +6,8 @@ from PIL import Image
 #small change in plan, instead of making a score, each burger will make the tip jar fill more and more until it is full, then the game wil end.
 # TODO: have it reset when the bun is placed after a bit. then the tip jar fills.
 class Asset:
-    def __init__(self, folder_path):
-        self.image = self.get_random_image(folder_path)
+    def __init__(self, folder_path, is_last_asset=False):
+        self.image = Asset.get_random_image(folder_path, is_last_asset)
         self.rect = self.image.get_rect(center = (random.randint(self.image.get_width()//2, 1920 - self.image.get_width()//2), 100))
         self.hitbox = self.rect.inflate(-20, -150)
         self.moving = True
@@ -16,10 +16,10 @@ class Asset:
         self.speed_y = 0
         
     @staticmethod
-    def get_random_image(folder_path):
-        image_files = [f for f in os.listdir(folder_path) if f.startswith('Build_') and f.endswith('.png')]
-        if not image_files:
-            return None
+    def get_random_image(folder_path, is_last_asset=False):
+        if is_last_asset:
+            return pygame.image.load(os.path.join(folder_path, 'Build_Top_Bun.png')).convert_alpha()
+        image_files = [f for f in os.listdir(folder_path) if f.startswith('Build_') and f.endswith('.png') and f != 'Build_Top_Bun.png']
         random_image = random.choice(image_files)
         return pygame.image.load(os.path.join(folder_path, random_image)).convert_alpha()
     
@@ -104,22 +104,30 @@ def main():
         asset.update(burger_hitbox, dropped_assets)
         asset.draw(screen)
 
+
         if not asset.dropping and not asset.moving and not game_over:
+
             if asset.is_top_bun(folder_path):
                 game_over = True
                 pygame.display.flip()
                 pygame.time.wait(1000)
+                running = False
                 if stage < len(jar_stage_images) - 1:
                     stage += 1
                     jar_image = jar_stage_images[stage]
-                    asset = Asset(folder_path)
                     dropped_assets = []
                     game_over = False
                 else:
                     running = False
-            else:
-                asset = Asset(folder_path)
 
+            else:
+                dropped_assets.append(asset)
+                if len(dropped_assets) < 10:
+                    asset = Asset(folder_path, is_last_asset=len(dropped_assets) >= 9)
+                else:
+                    running = False
+
+ 
     
         pygame.display.flip()
         clock.tick(60)
