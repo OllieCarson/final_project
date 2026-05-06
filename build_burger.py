@@ -75,9 +75,11 @@ def main():
     pygame.display.set_caption("Build Burger")
     screen = pygame.display.set_mode((1920, 1080))
     bg = pygame.image.load("Burger_Game_Assets/Burger_BG.png").convert()
+
     clock = pygame.time.Clock()
     folder_path = os.path.join("Burger_Game_Assets", "burger_build")
-
+    receipt_path = os.path.join("Burger_Game_Assets", "receipt", "Receipt_Blank.png")
+    receipt_image = pygame.image.load(receipt_path).convert_alpha()
     jar_folder_path = os.path.join("Burger_Game_Assets", "jar")
     jar_images = [f for f in os.listdir(jar_folder_path) if f.startswith('Burger_Stage') and f.endswith('.png')]
     jar_images = sorted(jar_images)
@@ -102,6 +104,7 @@ def main():
                 
         screen.blit(bg, (0, 0))
         screen.blit(jar_image, (133, 510))
+        screen.blit(receipt_image, (1412, 74))
         burger_hitbox = build(screen, dropped_assets)
         asset.update(burger_hitbox, dropped_assets)
         asset.draw(screen)
