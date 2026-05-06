@@ -2,12 +2,14 @@ import random
 import os
 import pygame
 from PIL import Image
-
-#small change in plan, instead of making a score, each burger will make the tip jar fill more and more until it is full, then the game wil end.
-# TODO: have it reset when the bun is placed after a bit. then the tip jar fills.
+# Realized that trying to cap it at 10 and then adding the top bun wasnt working, and just spawning the top bun once it reaches 9 was easier.
+# took me an embarasingly long time to figure that out.
 class Asset:
-    def __init__(self, folder_path):
-        self.image = Asset.get_random_image(folder_path)
+    def __init__(self, folder_path, force_top_bun=False):
+        if force_top_bun:
+            self.image = pygame.image.load(os.path.join(folder_path, 'Build_Top_Bun.png'))
+        else: 
+            self.image = Asset.get_random_image(folder_path)
         self.rect = self.image.get_rect(center = (random.randint(self.image.get_width()//2, 1920 - self.image.get_width()//2), 100))
         self.hitbox = self.rect.inflate(-20, -150)
         self.moving = True
@@ -82,11 +84,11 @@ def main():
     jar_stage_images = [pygame.image.load(os.path.join(jar_folder_path, image)).convert_alpha() for image in jar_images]
     jar_image = jar_stage_images[0]
 
-    asset = Asset(folder_path)
     dropped_assets = []
     game_over = False
     stage = 0
-    
+
+    asset = Asset(folder_path)
     running = True
     while running:
         for event in pygame.event.get():
@@ -106,7 +108,7 @@ def main():
 
 
         if not asset.dropping and not asset.moving and not game_over:
-
+            dropped_assets.append(asset)
             if asset.is_top_bun(folder_path):
                 game_over = True
                 pygame.display.flip()
@@ -119,6 +121,8 @@ def main():
                     game_over = False
                 else:
                     running = False
+            elif len(dropped_assets) >= 10:
+                asset = Asset(folder_path, asset.is_top_bun)
             else:
                 asset = Asset(folder_path)
 
