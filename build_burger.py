@@ -58,7 +58,7 @@ def get_receipt_order(receipt_folder_path, burger_folder_path):
     receipt_files = [f for f in os.listdir(receipt_folder_path) if f.startswith('Receipt_') and f.endswith('.png')]
     receipt_files = random.sample(receipt_files, 6)
 
-    order = [0]
+    order = []
     for receipt_file in receipt_files:
         ingredient_name = receipt_file.replace('Receipt_', '', 1)
         burger_file = 'Build_' + ingredient_name
@@ -73,7 +73,7 @@ def get_receipt_order(receipt_folder_path, burger_folder_path):
     return order
 
 def draw_receipt_order(screen, receipt_order, receipt_rect):
-    total_image_height = sum(item["receipt_image"].ger_height() for item in receipt_order)
+    total_image_height = sum(item["receipt_image"].get_height() for item in receipt_order)
     spacing = (receipt_rect.height - total_image_height) // (len(receipt_order) + 1)
 
     y = receipt_rect.top + spacing
