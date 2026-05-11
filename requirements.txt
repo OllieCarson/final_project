@@ -1,0 +1,4 @@
+random
+operating system/os
+pygame
+pillow

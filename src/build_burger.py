@@ -46,8 +46,6 @@ class Asset:
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-        pygame.draw.rect(screen, (0, 255, 0), self.hitbox, 2)
-
 
     def is_top_bun(self, folder_path):
         image_path = os.path.join(folder_path, 'Build_Top_Bun.png')
@@ -98,11 +96,9 @@ def build(screen, dropped_assets):
     bun_hitbox = b_bun_rect.inflate(-20, -90)
 
     screen.blit(bottom_bun, (632, 815))
-    pygame.draw.rect(screen, (255, 0, 0), bun_hitbox, 2)
 
     for asset in dropped_assets:
         screen.blit(asset.image, asset.rect)
-        pygame.draw.rect(screen, (0, 255, 0), asset.hitbox, 2)
 
         if dropped_assets:
             bun_hitbox = dropped_assets[-1].hitbox
