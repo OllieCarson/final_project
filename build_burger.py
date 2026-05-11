@@ -73,15 +73,22 @@ def get_receipt_order(receipt_folder_path, burger_folder_path):
     return order
 
 def draw_receipt_order(screen, receipt_order, receipt_rect):
-    total_image_height = sum(item["receipt_image"].get_height() for item in receipt_order)
-    spacing = (receipt_rect.height - total_image_height) // (len(receipt_order) + 1)
+    top_y = 221
+    bottom_y = 597
 
-    y = receipt_rect.top + spacing
+
+    total_image_height = sum(item["receipt_image"].get_height() for item in receipt_order)
+    spacing = (bottom_y - top_y - total_image_height) // (len(receipt_order) + 1)
+
+    y = bottom_y - spacing
+
     for item in receipt_order:
         image = item["receipt_image"]
         x = receipt_rect.centerx - image.get_width() // 2
+
+        y -= image.get_height()
         screen.blit(image, (x, y))
-        y += image.get_height() + spacing
+        y -= spacing
 
 
 
@@ -157,7 +164,7 @@ def main():
 
             ing_number += 1
             if ing_number < len(receipt_order):
-                asset = Asset(folder_path, image_name=receipt_order[ing_number]["burger_file"])
+                asset = Asset(folder_path, image_name = receipt_order[ing_number]["burger_file"])
             else:
                 asset = Asset(folder_path, force_top_bun=True)
 
@@ -171,7 +178,7 @@ def main():
                     jar_image = jar_stage_images[stage]
                     receipt_order = get_receipt_order(receipt_folder_path, folder_path)
                     ing_number = 0
-                    asset = Asset(folder_path, image_name=receipt_order[ing_number]["burger_file"])
+                    asset = Asset(folder_path, image_name = receipt_order[ing_number]["burger_file"])
                     dropped_assets = []
                     game_over = False
                 else:
